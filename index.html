@@ -290,6 +290,36 @@
   </section>
 
 
+  <!-- ===== BEFORE AND AFTER SECTION ===== -->
+  <section class="section section--bg" id="before-after" style="background-color: #F8FAFC;">
+    <div class="container">
+      <div class="section-title-wrapper text-center">
+        <span class="section__label">See The Difference</span>
+        <h2 class="section__title animate-on-scroll">Chip Repair: Before & After</h2>
+        <p class="section__subtitle animate-on-scroll animate-on-scroll--delay-1">Drag the slider to see how a rock chip disappears with our resin repair — no full windshield replacement needed.</p>
+      </div>
+
+      <div class="ba-slider animate-on-scroll animate-on-scroll--delay-2">
+        <div class="ba-slider__img-after">
+          <img src="resources/windshield_after.png" alt="Repaired Windshield After">
+        </div>
+        <div class="ba-slider__img-before" id="ba-img-before">
+          <img src="resources/windshield_before.png" alt="Broken Windshield Before">
+        </div>
+        
+        <span class="ba-slider__label ba-slider__label--before">Before</span>
+        <span class="ba-slider__label ba-slider__label--after">After</span>
+        
+        <div class="ba-slider__handle" id="ba-handle">
+          <div class="ba-slider__handle-btn">
+            <i class="ph ph-arrows-left-right" style="font-size: 20px;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
   <!-- ===== LOCATIONS SECTION ===== -->
   <section class="section" id="locations">
     <div class="container">
@@ -421,53 +451,190 @@
   <!-- ===== QUOTE WIZARD SECTION ===== -->
   <section class="section section--dark" id="quote" style="background-image: linear-gradient(rgba(11, 19, 42, 0.8), rgba(11, 19, 42, 0.9)), url('resources/hero-bg.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
     <div class="container">
-      <div class="contact-split">
-        <div class="contact-image-container animate-on-scroll">
-          <img src="resources/auto_glass_technician.png" alt="Auto Glass Technician" class="contact-img">
+      <div class="section-title-wrapper text-center">
+        <span class="section__label" style="color: var(--color-primary); padding-left: 0;">Free Estimate</span>
+        <h2 class="section__title animate-on-scroll">Get A Quote In Minutes</h2>
+        <p class="section__subtitle animate-on-scroll animate-on-scroll--delay-1" style="color: rgba(255,255,255,0.8); margin: 0 auto;">Answer a few quick questions and we'll provide a transparent, competitive quote for your auto glass needs.</p>
+      </div>
+
+      <div class="quote-wizard-container animate-on-scroll animate-on-scroll--delay-2" style="color: var(--color-text-primary);">
+        <!-- Progress Header -->
+        <div class="wizard-steps-header">
+          <div class="wizard-steps-line"></div>
+          <div class="wizard-steps-line-progress" id="wizard-progress-bar" style="width: 0%;"></div>
+          <div class="wizard-step-node wizard-step-node--active" data-step="1">1</div>
+          <div class="wizard-step-node" data-step="2">2</div>
+          <div class="wizard-step-node" data-step="3">3</div>
+          <div class="wizard-step-node" data-step="4">4</div>
         </div>
-        <div class="contact-split-right animate-on-scroll animate-on-scroll--delay-1">
-          <div class="section-title-wrapper text-left" style="margin-bottom: var(--space-xl);">
-            <span class="section__label" style="color: var(--color-primary); display: flex; align-items: center; gap: 8px;">
-              <i class="ph ph-car"></i> WHAT WE DO
-            </span>
-            <h2 class="section__title" style="margin-top: var(--space-sm); line-height: 1.2;">Get a Free Quote<br><span style="font-weight: 300;">Today</span></h2>
-            <p style="color: #fff; margin-top: var(--space-sm); margin-bottom: var(--space-md); font-size: var(--fs-md); line-height: 1.6; opacity: 0.8;">
-              Need auto glass repair or replacement? Fill out the form below and one of our specialists will get back to you with a free, no-obligation quote.
-            </p>
-          </div>
+
+        <form id="quote-wizard-form" onsubmit="event.preventDefault();">
           
-          <div class="contact-form-container">
-            <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! We will get in touch shortly.');">
-              <div class="form-group-with-icon">
-                <input type="text" class="form-input" placeholder="Your Full Name" required>
-                <i class="ph ph-user form-icon"></i>
-              </div>
-              <div class="form-group-with-icon">
-                <input type="email" class="form-input" placeholder="Your Email Address" required>
-                <i class="ph ph-envelope form-icon"></i>
-              </div>
-              <div class="form-group-with-icon">
-                <select class="form-input" required>
-                  <option value="" disabled selected hidden>Topic/Subjects</option>
-                  <option value="Windshield Replacement">Windshield Replacement</option>
-                  <option value="Rock Chip Repair">Rock Chip Repair</option>
-                  <option value="ADAS Recalibration">ADAS Recalibration</option>
-                  <option value="Other Inquiry">Other Inquiry</option>
+          <!-- STEP 1: Service Type -->
+          <div class="wizard-panel wizard-panel--active" data-wizard-step="1">
+            <h3 class="wizard-panel__title">What do you need help with?</h3>
+            <p class="wizard-panel__desc">Select the main service you are looking for.</p>
+
+            <div class="wizard-choices-grid">
+              <!-- Choice 1 -->
+              <label class="wizard-choice-card">
+                <input type="radio" name="service_type" value="replacement" class="wizard-choice-card__input" required checked>
+                <div class="wizard-choice-card__box">
+                  <div class="wizard-choice-card__icon"><i class="ph ph-car"></i></div>
+                  <span class="wizard-choice-card__title">Windshield<br>Replacement</span>
+                </div>
+              </label>
+              <!-- Choice 2 -->
+              <label class="wizard-choice-card">
+                <input type="radio" name="service_type" value="repair" class="wizard-choice-card__input">
+                <div class="wizard-choice-card__box">
+                  <div class="wizard-choice-card__icon"><i class="ph ph-shield-check"></i></div>
+                  <span class="wizard-choice-card__title">Rock Chip<br>Repair</span>
+                </div>
+              </label>
+              <!-- Choice 3 -->
+              <label class="wizard-choice-card">
+                <input type="radio" name="service_type" value="other" class="wizard-choice-card__input">
+                <div class="wizard-choice-card__box">
+                  <div class="wizard-choice-card__icon"><i class="ph ph-magnifying-glass"></i></div>
+                  <span class="wizard-choice-card__title">Other Glass<br>Services</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="wizard-actions">
+              <div></div>
+              <button type="button" class="btn btn--primary btn--skewed" data-wizard-next><span>Next Step »</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Vehicle Info -->
+          <div class="wizard-panel" data-wizard-step="2">
+            <h3 class="wizard-panel__title">Vehicle Information</h3>
+            <p class="wizard-panel__desc">Tell us about the vehicle that needs service.</p>
+
+            <div class="wizard-form-row">
+              <div class="wizard-form-group">
+                <label class="wizard-form-label">Year *</label>
+                <select class="wizard-form-select" id="vehicle-year" name="vehicle_year" required>
+                  <option value="" disabled selected>Select Year</option>
+                  <!-- Populated by JS -->
                 </select>
               </div>
-              <div class="form-group-with-icon">
-                <textarea class="form-input" placeholder="Write Message" rows="4" required style="resize: vertical;"></textarea>
-                <i class="ph ph-pencil-simple form-icon" style="top: 24px; transform: none;"></i>
+              <div class="wizard-form-group">
+                <label class="wizard-form-label">Make *</label>
+                <input type="text" class="wizard-form-input" placeholder="e.g. Toyota, Ford" name="vehicle_make" required>
               </div>
-              <div class="form-actions" style="margin-top: var(--space-xl);">
-                <button type="submit" class="btn-contact-submit">
-                  SEND MESSAGE &raquo;
-                </button>
+            </div>
+
+            <div class="wizard-form-group">
+              <label class="wizard-form-label">Model *</label>
+              <input type="text" class="wizard-form-input" placeholder="e.g. Camry, F-150" name="vehicle_model" required>
+            </div>
+
+            <div class="wizard-toggle-box">
+              <div>
+                <div class="wizard-toggle-box__lbl">ADAS Safety Cameras?</div>
+                <div class="wizard-toggle-box__desc">Does your vehicle have lane assist, emergency braking, etc.?</div>
               </div>
-            </form>
+              <label class="form-switch">
+                <input type="checkbox" name="has_adas" class="form-switch__input">
+                <span class="form-switch__slider"></span>
+              </label>
+            </div>
+
+            <div class="wizard-actions">
+              <button type="button" class="btn btn--secondary btn--skewed" data-wizard-prev><span>« Back</span></button>
+              <button type="button" class="btn btn--primary btn--skewed" data-wizard-next><span>Next Step »</span></button>
+            </div>
           </div>
-        </div>
+
+          <!-- STEP 3: Location / Insurance -->
+          <div class="wizard-panel" data-wizard-step="3">
+            <h3 class="wizard-panel__title">Service Details</h3>
+            <p class="wizard-panel__desc">Where are you located and how will you pay?</p>
+
+            <div class="wizard-choices-grid wizard-choices-grid--2">
+              <label class="wizard-choice-card">
+                <input type="radio" name="location" value="az" class="wizard-choice-card__input" required checked>
+                <div class="wizard-choice-card__box">
+                  <div class="wizard-choice-card__icon"><i class="ph ph-map-pin"></i></div>
+                  <span class="wizard-choice-card__title">Arizona<br>(Phoenix Metro)</span>
+                </div>
+              </label>
+              <label class="wizard-choice-card">
+                <input type="radio" name="location" value="nc" class="wizard-choice-card__input">
+                <div class="wizard-choice-card__box">
+                  <div class="wizard-choice-card__icon"><i class="ph ph-map-pin"></i></div>
+                  <span class="wizard-choice-card__title">North Carolina<br>(Coastal)</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="wizard-form-group">
+              <label class="wizard-form-label">Payment Method *</label>
+              <select class="wizard-form-select" name="payment_method" required>
+                <option value="" disabled selected>Select Option</option>
+                <option value="insurance">Going through Insurance</option>
+                <option value="cash">Paying Out of Pocket (Cash/Card)</option>
+              </select>
+            </div>
+
+            <div class="wizard-actions">
+              <button type="button" class="btn btn--secondary btn--skewed" data-wizard-prev><span>« Back</span></button>
+              <button type="button" class="btn btn--primary btn--skewed" data-wizard-next><span>Next Step »</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Contact Info -->
+          <div class="wizard-panel" data-wizard-step="4">
+            <h3 class="wizard-panel__title">Contact Information</h3>
+            <p class="wizard-panel__desc">Where should we send your estimate?</p>
+
+            <div class="wizard-form-row">
+              <div class="wizard-form-group">
+                <label class="wizard-form-label">First Name *</label>
+                <input type="text" class="wizard-form-input" placeholder="John" required>
+              </div>
+              <div class="wizard-form-group">
+                <label class="wizard-form-label">Last Name *</label>
+                <input type="text" class="wizard-form-input" placeholder="Doe" required>
+              </div>
+            </div>
+
+            <div class="wizard-form-group">
+              <label class="wizard-form-label">Phone Number *</label>
+              <input type="tel" class="wizard-form-input" placeholder="(555) 555-5555" required>
+            </div>
+
+            <div class="wizard-form-group">
+              <label class="wizard-form-label">Email Address *</label>
+              <input type="email" class="wizard-form-input" placeholder="john@example.com" required>
+            </div>
+
+            <div class="wizard-actions">
+              <button type="button" class="btn btn--secondary btn--skewed" data-wizard-prev><span>« Back</span></button>
+              <button type="button" class="btn btn--primary btn--skewed" id="wizard-submit"><span>Get My Quote »</span></button>
+            </div>
+          </div>
+
+          <!-- SUCCESS STEP -->
+          <div class="wizard-panel" data-wizard-step="success">
+            <div class="wizard-success-card">
+              <div class="wizard-success-card__icon">
+                <i class="ph ph-check"></i>
+              </div>
+              <h3 class="wizard-panel__title" style="font-size: var(--fs-2xl);">Request Received!</h3>
+              <p class="wizard-panel__desc" style="max-width: 400px; margin: 0 auto var(--space-xl);">
+                Thank you for choosing Auto Glass With Class. One of our specialists will review your information and contact you shortly with your free estimate.
+              </p>
+              <a href="#" class="btn btn--secondary btn--skewed" onclick="location.reload();"><span>Return Home</span></a>
+            </div>
+          </div>
+
+        </form>
       </div>
+
     </div>
   </section>
 

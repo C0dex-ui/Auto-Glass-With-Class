@@ -762,26 +762,35 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .feature-card {
-  background-color: var(--color-white);
+  background-color: var(--color-primary);
+  color: var(--color-white);
   padding: var(--space-xl) var(--space-lg);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   text-align: center;
   transition: all var(--transition-base);
   cursor: default;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-primary);
 }
 
 .feature-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
-  border-color: var(--color-primary);
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+.feature-card__icon i {
+  font-size: 64px;
+  color: var(--color-white);
+  display: inline-block;
+  line-height: 1;
 }
 
 .feature-card__icon {
   width: 72px;
   height: 72px;
-  color: var(--color-primary);
+  color: var(--color-white);
   margin: 0 auto var(--space-md);
   transition: all var(--transition-base);
 }
@@ -799,7 +808,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-size: var(--fs-base);
   font-weight: var(--fw-bold);
-  color: var(--color-secondary);
+  color: var(--color-white);
   line-height: var(--lh-tight);
   text-transform: capitalize;
 }
@@ -916,8 +925,8 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 2;
 }
 
-.service-card-new__icon-badge .dashicons {
-  font-size: 26px;
+.service-card-new__icon-badge i {
+  font-size: 32px;
   width: 26px;
   height: 26px;
   line-height: 1;
@@ -1471,6 +1480,13 @@ h1, h2, h3, h4, h5, h6 {
   width: 90px;
   height: 90px;
   margin-bottom: var(--space-md);
+  background-color: var(--color-white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
 }
 
 .testimonial-item__img {
@@ -1487,14 +1503,13 @@ h1, h2, h3, h4, h5, h6 {
   right: -5px;
   width: 28px;
   height: 28px;
-  background-color: var(--color-primary);
-  color: var(--color-white);
+  background-color: var(--color-white);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--fs-xs);
   box-shadow: var(--shadow-sm);
+  padding: 5px;
 }
 
 .testimonial-item__stars {

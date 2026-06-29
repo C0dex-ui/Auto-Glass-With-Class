@@ -110,139 +110,6 @@
 
 
   /* --------------------------------------------------------------------
-     5. MULTI-STEP QUOTE WIZARD
-     -------------------------------------------------------------------- */
-  let currentStep = 1;
-  const totalSteps = 4;
-
-  const wizardPanels = document.querySelectorAll('[data-wizard-step]');
-  const wizardNodes = document.querySelectorAll('.wizard-step-node');
-  const progressBar = document.getElementById('wizard-progress-bar');
-
-  // Populate year dropdown
-  const yearSelect = document.getElementById('vehicle-year');
-  if (yearSelect) {
-    const currentYear = new Date().getFullYear();
-    for (let y = currentYear + 1; y >= 1990; y--) {
-      const opt = document.createElement('option');
-      opt.value = y;
-      opt.textContent = y;
-      yearSelect.appendChild(opt);
-    }
-  }
-
-  function updateWizardUI() {
-    // Show/Hide steps
-    wizardPanels.forEach(panel => {
-      const stepVal = panel.dataset.wizardStep;
-      if (stepVal === String(currentStep) || stepVal === currentStep) {
-        panel.classList.add('wizard-panel--active');
-      } else {
-        panel.classList.remove('wizard-panel--active');
-      }
-    });
-
-    // Update steps state & visual nodes
-    wizardNodes.forEach(node => {
-      const nodeStep = parseInt(node.dataset.step);
-      node.classList.remove('wizard-step-node--active', 'wizard-step-node--completed');
-
-      if (nodeStep === currentStep) {
-        node.classList.add('wizard-step-node--active');
-        node.textContent = nodeStep;
-      } else if (nodeStep < currentStep) {
-        node.classList.add('wizard-step-node--completed');
-        node.innerHTML = '✓';
-      } else {
-        node.textContent = nodeStep;
-      }
-    });
-
-    // Update progress bar length
-    if (progressBar) {
-      const pct = ((currentStep - 1) / (totalSteps - 1)) * 100;
-      progressBar.style.width = `${pct}%`;
-    }
-  }
-
-  // Next / Prev button triggers
-  document.querySelectorAll('[data-wizard-next]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      // Basic validate for inputs on Step 1 & 4
-      const activePanel = document.querySelector('.wizard-panel--active');
-      const requiredInputs = activePanel.querySelectorAll('[required]');
-      let valid = true;
-
-      requiredInputs.forEach(input => {
-        if (!input.value.trim()) {
-          valid = false;
-          input.style.borderColor = 'var(--color-danger)';
-        } else {
-          input.style.borderColor = 'var(--color-border)';
-        }
-      });
-
-      if (!valid) return;
-
-      if (currentStep < totalSteps) {
-        currentStep++;
-        updateWizardUI();
-      }
-    });
-  });
-
-  document.querySelectorAll('[data-wizard-prev]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (currentStep > 1) {
-        currentStep--;
-        updateWizardUI();
-      }
-    });
-  });
-
-  // Submit button
-  const submitBtn = document.getElementById('wizard-submit');
-  if (submitBtn) {
-    submitBtn.addEventListener('click', () => {
-      const activePanel = document.querySelector('.wizard-panel--active');
-      const requiredInputs = activePanel.querySelectorAll('[required]');
-      let valid = true;
-
-      requiredInputs.forEach(input => {
-        if (!input.value.trim()) {
-          valid = false;
-          input.style.borderColor = 'var(--color-danger)';
-        } else {
-          input.style.borderColor = 'var(--color-border)';
-        }
-      });
-
-      if (!valid) return;
-
-      // Submit successful, show success step
-      currentStep = 'success';
-      wizardPanels.forEach(p => p.classList.remove('wizard-panel--active'));
-      const successPanel = document.querySelector('[data-wizard-step="success"]');
-      if (successPanel) {
-        successPanel.classList.add('wizard-panel--active');
-      }
-
-      // Fill progress indicators
-      wizardNodes.forEach(node => {
-        node.classList.remove('wizard-step-node--active');
-        node.classList.add('wizard-step-node--completed');
-        node.innerHTML = '✓';
-      });
-      if (progressBar) {
-        progressBar.style.width = '100%';
-      }
-    });
-  }
-
-  // Initial layout set
-  updateWizardUI();
-
-
   /* --------------------------------------------------------------------
      6. TESTIMONIAL SLIDER
      -------------------------------------------------------------------- */
@@ -436,3 +303,73 @@
   }
 
 })();
+
+
+  /* --------------------------------------------------------------------
+     GOOGLE REVIEWS - LIVE FEED
+     -------------------------------------------------------------------- */
+  const GOOGLE_API_KEY = ''; // Add your API key here
+  const GOOGLE_PLACE_ID = ''; // Add your Place ID here
+
+  let _mapsP = null;
+
+  function _esc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  function _loadMaps(key) {
+    if (window.google && window.google.maps && window.google.maps.importLibrary) return Promise.resolve();
+    if (_mapsP) return _mapsP;
+    _mapsP = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(key) + '&v=weekly&loading=async&libraries=places';
+      s.async = true;
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('Google Maps JS failed to load'));
+      document.head.appendChild(s);
+    });
+    return _mapsP;
+  }
+
+  function _renderReviews(place) {
+    const grid = document.getElementById('agwc-reviews-grid');
+    const ratingEl = document.getElementById('agwc-rating');
+    const countEl = document.getElementById('agwc-rating-count');
+    const noteEl = document.getElementById('agwc-reviews-note');
+    if (place.rating && ratingEl) ratingEl.textContent = Number(place.rating).toFixed(1);
+    if (place.userRatingCount && countEl) countEl.textContent = Number(place.userRatingCount).toLocaleString() + ' Google reviews';
+    if (noteEl && noteEl.lastChild) { noteEl.style.color = '#1b9e5a'; noteEl.lastChild.textContent = ' Live feed connected - reviews update automatically from Google.'; }
+    const reviews = (place.reviews || []).slice(0, 3);
+    if (!grid || !reviews.length) return;
+    const palette = ['#1d7ce5', '#34A853', '#EA4335'];
+    const gLogo = '<svg width="22" height="22" viewBox="0 0 48 48"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 9.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 2.97 29.93 1 24 1 15.4 1 7.96 5.93 4.34 13.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg>';
+    grid.innerHTML = reviews.map((rv, i) => {
+      const attr = rv.authorAttribution || {};
+      const pic = attr.photoURI 
+        ? '<img src="' + attr.photoURI + '" referrerpolicy="no-referrer" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">' 
+        : '<div style="width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;background:' + palette[i % palette.length] + ';">' + _esc(attr.displayName).charAt(0).toUpperCase() + '</div>';
+      return '<div style="width:340px;flex-shrink:0;margin-right:22px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:0 8px 24px -16px rgba(11,34,64,0.4);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;"><div style="display:flex;align-items:center;gap:12px;">' + pic + '<div><div style="font-family:\'Archivo\',sans-serif;font-weight:700;font-size:16px;color:var(--navy);line-height:1.2;">' + _esc(attr.displayName) + '</div><div style="font-size:12.5px;color:var(--slate);margin-top:2px;">' + _esc(rv.relativePublishTimeDescription) + '</div></div></div>' + gLogo + '</div><div style="display:flex;gap:2px;color:var(--star);margin-bottom:12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7L12 18l-6.3 3.2L7 14.2l-5-4.8 7-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7L12 18l-6.3 3.2L7 14.2l-5-4.8 7-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7L12 18l-6.3 3.2L7 14.2l-5-4.8 7-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7L12 18l-6.3 3.2L7 14.2l-5-4.8 7-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.5 7 .9-5 4.8 1.3 7L12 18l-6.3 3.2L7 14.2l-5-4.8 7-.9z"/></svg></div><div style="font-size:14.5px;color:var(--ink);line-height:1.5;">"' + _esc(rv.text ? rv.text.text : '') + '"</div></div>';
+    }).join('');
+    grid.innerHTML += grid.innerHTML; // loop
+  }
+
+  function loadGoogleReviews() {
+    const cfg = { apiKey: GOOGLE_API_KEY, placeId: GOOGLE_PLACE_ID };
+    if (!cfg.apiKey || !cfg.placeId) return; // not configured -> keep curated reviews
+    _loadMaps(cfg.apiKey)
+      .then(() => google.maps.importLibrary('places'))
+      .then((lib) => {
+        const place = new lib.Place({ id: cfg.placeId });
+        return place.fetchFields({ fields: ['rating', 'userRatingCount', 'reviews'] }).then((r) => r.place || place);
+      })
+      .then((place) => _renderReviews(place))
+      .catch((e) => console.warn('[AGWC] Google reviews unavailable, showing curated set:', e && e.message));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadGoogleReviews();
+    const _rt = document.getElementById('agwc-reviews-grid');
+    if (_rt && !_rt.dataset.looped) { 
+      _rt.dataset.looped = '1'; 
+      _rt.innerHTML += _rt.innerHTML; 
+    }
+  });
+
